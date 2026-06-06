@@ -119,11 +119,23 @@ export function renderMealPlan(plan, containerId) {
     }
   });
 
+  const downloadBtn = createSafeElement('button', 'Download Plan', 'copy-btn', {
+    'type': 'button',
+    'aria-label': 'Download meal plan text file',
+    'id': 'btn-download-plan',
+    'style': 'margin-left: 8px;'
+  });
+  
+  downloadBtn.addEventListener('click', () => {
+    triggerDownloadPlan(plan);
+  });
+
   const buttonWrapper = document.createElement('div');
   buttonWrapper.style.display = 'flex';
   buttonWrapper.style.alignItems = 'center';
   buttonWrapper.appendChild(newBtn);
   buttonWrapper.appendChild(copyBtn);
+  buttonWrapper.appendChild(downloadBtn);
   
   titleRow.appendChild(buttonWrapper);
   resultsCard.appendChild(titleRow);
@@ -651,9 +663,9 @@ function createChecklistPanel(plan) {
 }
 
 /**
- * Handle meal plan plain-text compilation and clipboard action.
+ * Compile the meal plan into a clean plain text representation.
  */
-async function triggerCopyPlan(plan, btnElement) {
+export function compileMealPlanText(plan) {
   const compileRecipeText = (mealName, recipe) => {
     return `${mealName}: ${recipe.name}\nDescription: ${recipe.description}\nActive Time: Prep ${recipe.prepTime}m, Cook ${recipe.cookTime}m\nIngredients:\n${recipe.ingredients.map(i => ` - ${i}`).join('\n')}\nInstructions:\n${recipe.instructions.map((ins, step) => ` ${step + 1}. ${ins}`).join('\n')}`;
   };
@@ -661,7 +673,7 @@ async function triggerCopyPlan(plan, btnElement) {
   const groceriesText = plan.groceryList.map(item => ` - ${item.name} (${item.quantity}) - ${formatCurrency(item.cost)}`).join('\n');
   const substitutionsText = plan.substitutions.map(sub => ` - Use ${sub.replacement} instead of ${sub.ingredient}`).join('\n');
   
-  const text = `COOKFLOW AI DAILY COOKING PLAN
+  return `COOKFLOW AI DAILY COOKING PLAN
 ====================================
 ${compileRecipeText('BREAKFAST', plan.breakfast)}
 
@@ -685,7 +697,13 @@ Estimated Cost: ${formatCurrency(plan.budgetAnalysis.estimatedCost)}
 Status: ${plan.budgetAnalysis.status.toUpperCase()}
 Savings Suggestions:\n${plan.budgetAnalysis.savingsTips.map(t => ` - ${t}`).join('\n')}
 `;
+}
 
+/**
+ * Handle meal plan plain-text compilation and clipboard action.
+ */
+async function triggerCopyPlan(plan, btnElement) {
+  const text = compileMealPlanText(plan);
   const success = await copyToClipboard(text);
   if (success) {
     btnElement.textContent = 'Copied!';
@@ -696,6 +714,28 @@ Savings Suggestions:\n${plan.budgetAnalysis.savingsTips.map(t => ` - ${t}`).join
       btnElement.textContent = 'Copy Plan';
       btnElement.classList.remove('copied');
     }, 2000);
+  }
+}
+
+/**
+ * Handle meal plan text file compilation and download trigger.
+ */
+function triggerDownloadPlan(plan) {
+  try {
+    const text = compileMealPlanText(plan);
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cookflow-meal-plan.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    announceStatus("Meal plan text file downloaded successfully.");
+  } catch (err) {
+    console.error("Failed to download plan:", err);
+    alert("Failed to download the meal plan file.");
   }
 }
 
