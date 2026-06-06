@@ -4,23 +4,30 @@ CookFlow is a premium, secure, accessible, and high-performance client-side AI m
 
 ---
 
-## 🛠️ Getting Started / Quick Start
+## 🚀 Deployed & Live
+The application is live and accessible online:
+*   **Live App**: [https://cookflow-opal.vercel.app/](https://cookflow-opal.vercel.app/)
+*   **QA Automated Test Dashboard**: [https://cookflow-opal.vercel.app/tests/index.html](https://cookflow-opal.vercel.app/tests/index.html)
+
+---
+
+## 🛠️ Local Getting Started
 
 ### 1. Run the Local Server
-Since CookFlow is built using modern ES Modules, it requires an HTTP server context to load module imports. You can spin up the server immediately using Python:
+Since CookFlow is built using modern ES Modules, it requires an HTTP server context to load module imports. You can spin up a local server immediately using Python:
 
 ```bash
 # In the project root folder
-python -m http.server 8000
+python -m http.server 8888
 ```
 
 ### 2. View the Application
 Open your browser and navigate to:
-[http://localhost:8000](http://localhost:8000)
+[http://localhost:8888](http://localhost:8888)
 
 ### 3. Run the Test Suite Dashboard
-To run the automated QA test suite, navigate to the test dashboard at:
-[http://localhost:8000/tests/index.html](http://localhost:8000/tests/index.html)
+To run the automated QA test suite locally, navigate to the test dashboard at:
+[http://localhost:8888/tests/index.html](http://localhost:8888/tests/index.html)
 
 ---
 
@@ -30,25 +37,25 @@ CookFlow uses a modular, component-based frontend architecture built in native J
 
 ```
 /
-├── index.html            # Main entry point (semantic landmarks, accessible forms)
+├── index.html            # Main entry point (semantic landmarks, accessible single-page form)
 ├── css/
-│   ├── main.css          # Design system variables, typography, resets
-│   ├── components.css    # Premium CSS styles (glassmorphism cards, forms, timeline checklist)
-│   └── animations.css    # Interactive micro-motions (cooking spinner, slide fades)
+│   ├── main.css          # Design system variables, typography, resets, HSL colors
+│   ├── components.css    # Premium CSS styles (glassmorphism cards, checkable lists, stopwatch)
+│   └── animations.css    # Interactive micro-motions (cooking spinner, fade-in animations)
 ├── js/
-│   ├── app.js            # Coordinator, state manager, DOM events
-│   ├── config.js         # Settings, diet lists, schemas, simulation databases
-│   ├── api.js            # Prompt composition, Gemini API fetcher, robust JSON parser
-│   ├── security.js       # Sanitizers, numeric validations, XSS guards, rate limiters
-│   ├── ui.js             # Wizards, chips, active tabs, dialog focus managers
+│   ├── app.js            # Coordinator, state manager, URL/storage key fetcher, DOM events
+│   ├── config.js         # Settings, diet lists, schemas, fallback databases
+│   ├── api.js            # Prompt composition, Gemini API fetcher, procedural simulation engine
+│   ├── security.js       # Sanitizers, numeric bounds validators, XSS guards, rate limiters
+│   ├── ui.js             # Active tabs, chips, dynamic SVG budget gauges, stopwatch modals
 │   └── utils.js          # Mergers, formatters, HTML escapers, clipboard copies
 └── tests/
     ├── index.html        # Testing dashboard UI panel
     ├── run_tests.js      # Testing framework and reporter
-    ├── security.test.js  # Security validations, sanitization and rate limits
-    ├── api.test.js       # Prompt composition, JSON errors and simulation configurations
-    ├── ui.test.js        # Multi-step navigation and chips integrations
-    └── a11y.test.js      # Landmark roles, bypass checks and labels
+    ├── security.test.js  # Security validations, sanitization, and rate limits
+    ├── api.test.js       # Prompt composition, JSON errors, and simulation configurations
+    ├── ui.test.js        # Parameter synchronization, chip removals, and form submit integrations
+    └── a11y.test.js      # Landmark roles, bypass links, and linked labels
 ```
 
 ---
@@ -57,10 +64,10 @@ CookFlow uses a modular, component-based frontend architecture built in native J
 
 CookFlow implements robust defensive engineering:
 
-1.  **Prompt Injection Shields**: User variables are strictly sanitized (regex filters strip command instructions and scripts) and isolated inside XML tags (`<user_ingredients>`) with clear LLM instructions to treat them strictly as data.
-2.  **Strict XSS Shielding**: CookFlow completely avoids `innerHTML`. All rendering is done via `textContent` or dynamically constructed DOM nodes via a secure utility (`createSafeElement`).
-3.  **Positive Numeric Validators**: Checks numeric bounds on budget, time, and people, rejecting negative or abnormally large numbers before compiling prompt contexts.
-4.  **Secure Session Key Storage**: User API keys are stored in private variables and `sessionStorage`, keeping them out of source control and local storage, and routed exclusively to Google's official Gemini endpoint.
+1.  **Zero-Configuration Safety**: Standard users can generate plans instantly without entering an API key. For live AI generation, developers and testers can pass a key securely via the URL (`?key=AIzaSy...`) or store it locally.
+2.  **Prompt Injection Shields**: User variables are strictly sanitized (regex filters strip command instructions and scripts) and isolated inside XML tags (`<cooking_time_minutes>`) with clear instructions to treat them strictly as data.
+3.  **Strict XSS Shielding**: CookFlow completely avoids `innerHTML`. All rendering is done via `textContent` or dynamically constructed DOM nodes via a secure utility (`createSafeElement`).
+4.  **Positive Numeric Validators**: Checks numeric bounds on budget, time, and people, rejecting negative or abnormally large numbers before compiling prompt contexts.
 5.  **Rate Limiting Hook**: Rate limits generations to a maximum of 5 requests per minute, with interactive countdown clocks in the UI to prevent token fatigue or rapid double-click submissions.
 
 ---
@@ -71,9 +78,9 @@ CookFlow aligns with WCAG 2.2 AA standards:
 
 *   **Keyboard Navigation**: Full page is navigable via keyboard. Keyboard-only users can interact with sliders, dropdowns, and check off items in the timeline using `Enter` or `Space`.
 *   **Semantic Landmarks**: Implements `<header role="banner">`, `<main id="main-content">`, `<footer role="contentinfo">`, and `<section>` tags.
-*   **Focus Management**: Focus transitions to the active step title on wizard movements. Focus trapping is active inside settings modals, and focus is restored to the settings button upon modal close.
+*   **Focus Management**: Focus transitions to the active tabs on tab selection. Active focus trapping is set inside the recipe cooking stopwatch guides to keep focus on buttons and checkboxes.
 *   **Contrast ratios**: Text values use high-contrast combinations (ratio > 4.5:1) meeting WCAG AA requirements.
-*   **Screen-Reader Announcements**: A dedicated invisible live region (`role="status"`, `aria-live="polite"`) reads out wizard status updates, checklist checks, and API error reports.
+*   **Screen-Reader Announcements**: A dedicated invisible live region (`role="status"`, `aria-live="polite"`) reads out list updates, checklist checks, and generation completions.
 *   **Skip Links**: Includes an immediate focusable skip link at the top of the DOM to bypass layout headers.
 
 ---
@@ -81,5 +88,5 @@ CookFlow aligns with WCAG 2.2 AA standards:
 ## 🚀 Performance Optimizations
 
 1.  **Zero Dependency Footprint**: Leverages native browser ES Modules and Vanilla CSS, meaning zero npm security audits, package bloat, or bundle compile latency.
-2.  **Single LLM Round-Trip**: Combines Breakfast, Lunch, Dinner, Grocery list, budget, and cooking checklist in a single prompt and parses a single structured JSON payload.
+2.  **Single LLM Round-Trip**: Combines Breakfast, Lunch, Dinner, Grocery list, substitutions, budget analysis, and cooking checklist in a single prompt and parses a single structured JSON payload.
 3.  **Unidirectional UI updates**: Uses modular rendering modules (`ui.js`) to limit DOM repaints to the active cards.
