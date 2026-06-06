@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CookFlow - AI Cooking Planner</title>
+  <meta name="description" content="Generate personalized, budget-friendly meal plans and recipes styled perfectly for your day.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- WCAG Bypass Link -->
+  <a href="#main-content" class="skip-link">Skip to Main Content</a>
+
+  <!-- ARIA Live Status -->
+  <div id="aria-status" class="sr-only" role="status" aria-live="polite"></div>
+
+  <header role="banner" class="app-header">
+    <div class="logo-container">
+      <span class="logo-icon" aria-hidden="true">🍳</span>
+      <span class="logo-text">CookFlow</span>
+    </div>
+    <p style="font-size: 0.9rem; color: hsl(var(--text-muted)); margin-top: 4px;">AI-Powered Cooking Planner</p>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="app-container">
+    
+    <!-- Simplified Single-Page Setup Form -->
+    <div id="form-container" class="card">
+      <h2 style="margin-bottom: 8px; font-weight: 800;">Cooking Plan Setup</h2>
+      <p style="color: hsl(var(--text-muted)); margin-bottom: 24px; font-size: 0.9rem;">
+        Fill out your cooking constraints and click Generate to build your custom meal plan.
+      </p>
+
+      <form id="cookflow-form" novalidate>
+
+        <!-- TWO COLUMN INPUT GRID -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+          
+          <!-- Column 1: Numbers/Constraints -->
+          <div>
+            <div class="form-group">
+              <label for="input-time">Available Cooking Time: <span id="time-value" class="range-value">45 min</span></label>
+              <div class="range-container">
+                <input type="range" id="input-time" min="15" max="180" step="5" value="45">
+              </div>
+              <span class="helper-text">Total combined time for preparation & cooking.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="input-budget">Daily Budget ($): <span id="budget-value" class="range-value">$30.00</span></label>
+              <div class="range-container">
+                <input type="range" id="input-budget" min="5" max="150" step="5" value="30">
+              </div>
+              <span class="helper-text">Target budget for all three meals.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="input-people">Number of People: <span id="people-value" class="range-value">2</span></label>
+              <div class="range-container">
+                <input type="range" id="input-people" min="1" max="10" step="1" value="2">
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Selection / Dropdowns -->
+          <div>
+            <div class="form-group">
+              <label for="select-diet">Dietary Preference</label>
+              <select id="select-diet">
+                <option value="None">No Dietary Restrictions</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Keto">Keto (Low-Carb, High-Fat)</option>
+                <option value="Paleo">Paleo</option>
+                <option value="Pescatarian">Pescatarian</option>
+                <option value="Low-Carb">Low-Carb</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="select-cuisine">Desired Cuisine</label>
+              <select id="select-cuisine">
+                <option value="No Preference">No Preference</option>
+                <option value="Italian">Italian</option>
+                <option value="Mexican">Mexican</option>
+                <option value="Indian">Indian</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Mediterranean">Mediterranean</option>
+                <option value="French">French</option>
+                <option value="Thai">Thai</option>
+                <option value="American">American</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="select-skill">Your Cooking Skill Level</label>
+              <select id="select-skill">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate" selected>Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FULL WIDTH PANTRY INGREDIENTS -->
+        <div class="form-group" style="margin-top: 16px;">
+          <label for="input-ingredients">Available Ingredients</label>
+          <textarea id="input-ingredients" placeholder="e.g. Tomatoes, Spinach, Eggs, Chicken (comma separated)" rows="2"></textarea>
+          <span class="helper-text">Enter ingredients you already have. AI will prioritize using them.</span>
+        </div>
+
+        <!-- FULL WIDTH ALLERGIES -->
+        <div class="form-group">
+          <fieldset style="border: none;">
+            <legend style="font-weight: 600; margin-bottom: 12px; font-size: 0.95rem;">Select Allergies to Exclude</legend>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;">
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Gluten" style="width:18px; height:18px;"> Gluten
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Peanuts" style="width:18px; height:18px;"> Peanuts
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Tree Nuts" style="width:18px; height:18px;"> Tree Nuts
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Dairy" style="width:18px; height:18px;"> Dairy
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Soy" style="width:18px; height:18px;"> Soy
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Shellfish" style="width:18px; height:18px;"> Shellfish
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Fish" style="width:18px; height:18px;"> Fish
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                <input type="checkbox" class="allergy-checkbox" value="Eggs" style="width:18px; height:18px;"> Eggs
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- ACTION BUTTON -->
+        <div style="margin-top: 32px; text-align: center;">
+          <button type="submit" id="btn-submit" class="btn btn-primary" style="width: 100%; max-width: 400px; padding: 16px 32px; font-size: 1.1rem; border-radius: var(--border-radius-sm);">
+            Generate Meal Plan
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Results view container (Populated dynamically below the form) -->
+    <div id="results-view-container" style="display: none; margin-top: 24px;" aria-live="polite"></div>
+
+  </main>
+
+  <footer class="app-footer" role="contentinfo">
+    <p>&copy; 2026 CookFlow AI Planner. Secure, AA accessible, single-page application.</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
